@@ -72,3 +72,12 @@ def test_cnt_roll_3_uses_only_earlier_days(feats):
     CSV. Today's 6192 must not be in it."""
     row = feats.set_index("dteday").loc["2012-03-15"]
     assert row.cnt_roll_3 == pytest.approx(5819.0)
+
+
+def test_weather_encoder_rejects_unknown_label():
+    """encode_weather must raise on an unseen label instead of mapping it to
+    NaN, which a later dropna() would silently delete."""
+    from src.features import encode_weather
+
+    with pytest.raises(ValueError, match="unmapped weather labels"):
+        encode_weather(pd.Series(["GOOD", "STORMY"]))
