@@ -66,3 +66,7 @@ CLASSIFIED_RAW_COLS = {
     "dteday", "season", "mnth", "weekday", "holiday", "workday", "weather",
     "temp", "atemp", "hum", "windspeed",
 }
+
+# data/raw/bike_daily.csv is immutable. tests/test_contract.py and `make data`
+# check its sha256 so a `cp` from Bash (which permission rules do not bind) is caught.
+RAW_SHA256_PREFIX = "a6bed1577f6e4de5"

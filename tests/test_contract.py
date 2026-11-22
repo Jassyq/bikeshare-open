@@ -3,7 +3,11 @@ import pandas as pd
 import pytest
 from sklearn.metrics import r2_score
 
-from src.config import CLASSIFIED_RAW_COLS, FORBIDDEN, LAG_WARMUP, RAW, TARGET
+import hashlib
+
+from src.config import (
+    CLASSIFIED_RAW_COLS, FORBIDDEN, LAG_WARMUP, RAW, RAW_SHA256_PREFIX, TARGET,
+)
 from src.features import build_features, feature_columns, reindex_to_calendar
 from src.ingest import load_raw
 from src.train import MODELS, temporal_split
@@ -67,3 +71,10 @@ def test_every_raw_column_is_classified():
     known = FORBIDDEN | CLASSIFIED_RAW_COLS
     unclassified = raw_cols - known
     assert not unclassified, f"unclassified raw columns: {sorted(unclassified)}"
+
+
+def test_raw_data_is_unmodified():
+    """Raw data is immutable. Permission rules bind the Edit/Write tools, not
+    `cp` inside a Bash command, so only a content hash catches the latter."""
+    digest = hashlib.sha256(RAW.read_bytes()).hexdigest()
+    assert digest.startswith(RAW_SHA256_PREFIX), f"data/raw modified: sha256 {digest[:16]}"
