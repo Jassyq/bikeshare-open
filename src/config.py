@@ -53,3 +53,16 @@ VALID_END = "2012-06-30"
 # have no complete history and are dropped; tests/test_contract.py uses this
 # to bound how many rows may legitimately disappear.
 LAG_WARMUP = 7
+
+# Every raw column must be classified: in FORBIDDEN, or in this explicit set.
+# The numeric weather measurements are used directly as features; the
+# non-numeric columns are either turned into features by the builder (holiday,
+# workday, weather) or deliberately unused (season, mnth, weekday duplicate the
+# date-derived calendar features). A raw column in neither set is unclassified
+# and fails tests/test_contract.py. This is an allowlist on purpose:
+# feature_columns() admits any new numeric column, so the test must not lean
+# on it or it could never fail.
+CLASSIFIED_RAW_COLS = {
+    "dteday", "season", "mnth", "weekday", "holiday", "workday", "weather",
+    "temp", "atemp", "hum", "windspeed",
+}
