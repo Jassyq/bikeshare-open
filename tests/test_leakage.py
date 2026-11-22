@@ -64,3 +64,11 @@ def test_no_missing_values(feats):
 def test_dates_are_sorted_and_unique(feats):
     assert feats.dteday.is_monotonic_increasing
     assert feats.dteday.is_unique
+
+
+def test_cnt_roll_3_uses_only_earlier_days(feats):
+    """cnt_roll_3 on 2012-03-15 is the mean of 03-12, 03-13, 03-14 raw counts
+    (5298, 5847, 6312 -> 17457 / 3 = 5819.0), computed by hand from the raw
+    CSV. Today's 6192 must not be in it."""
+    row = feats.set_index("dteday").loc["2012-03-15"]
+    assert row.cnt_roll_3 == pytest.approx(5819.0)
