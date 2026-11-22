@@ -20,9 +20,15 @@ rides) from calendar, weather, and lagged-demand features.
 - Any new lag or rolling feature must be built on a gap-free calendar
   index (`src.features.reindex_to_calendar`) and must `.shift(1)` before
   it aggregates. Add a test for it in `tests/test_leakage.py`.
+- `data/raw/bike_daily.csv` is immutable (sha256 checked in `load_raw`). Any
+  new raw column must be classified in `CLASSIFIED_RAW_COLS` or `FORBIDDEN`.
 - Report the mean baseline **and** the persistence baseline (yesterday's
   count) alongside every model. A negative R^2 is a finding, not a bug
   to hide.
+
+## Skills
+- `/new-feature <name>`: add a feature with its test first.
+- `/seed-fault <description>`: break, record red output, restore.
 
 ## Style
 - Standard library, pandas, scikit-learn only. No new dependencies
