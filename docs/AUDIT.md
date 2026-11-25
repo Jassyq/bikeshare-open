@@ -59,12 +59,13 @@
 
 ## My verdict
 
-None of the auditor's findings changes a number, and I agree with that. I re-ran the parts that matter myself on his clone:
+I agree with the auditor: nothing in Michael's repo changes a number. I didn't want to take that on faith, so I re-ran the parts that matter on his clone:
 - `pytest` gives 17 passed.
 - `python -m src.features` gives 700 rows and 15 features.
-- Regenerating `reports/metrics.json` gives an output identical to his committed file.
-- The stale docstring in `tests/test_contract.py:33-39` is real. It says a gap costs 7 rows, while his `LAG_WARMUP` is 14. It is documentation only.
+- Regenerating `reports/metrics.json` gives a file identical to the one he committed.
 
-I weigh one finding more heavily than the auditor did: he removed `Write(./data/raw/**)` from the deny list. That changes no number today. But it lets the agent overwrite the raw CSV with the Write tool, which the assignment calls a rule to adopt for every project, and nothing else in his repo checks the file's contents. A tampered CSV would flow silently into every metric. I'd restore the rule and add a hash check on the raw file.
+The stale docstring in `tests/test_contract.py:33-39` is real. It still says a missing day costs 7 rows when his `LAG_WARMUP` is now 14. But that's documentation, not a bug.
 
-His design handles `LAG_WARMUP` correctly. Raising it to 14 for `cnt_roll_14` would have turned `cnt_lag_7` into a 14-day lag in the starter code, but he hard-coded 7, and the auditor's calendar recomputation confirms all four lag features are correct. Overall I find his results believable as reported.
+The one place I'd push harder than the auditor did is the removed `Write(./data/raw/**)` deny rule. It doesn't change any number today, since his raw CSV is untouched. But it means the agent can now overwrite the raw data with the Write tool, and nothing else in his repo checks the file's contents. If that ever happened, a tampered CSV would flow into every metric without a single test going red. I'd put the rule back and add a hash check on the raw file, which is what I ended up doing in my own repo after my `cp` fault.
+
+The detail I was most impressed by is how he handled `LAG_WARMUP`. In the starter code, `cnt_lag_7` uses `shift(LAG_WARMUP)`. So raising `LAG_WARMUP` to 14 for his `cnt_roll_14` would have quietly turned it into a 14-day lag. He hard-coded the 7 instead, and the auditor's recomputation from calendar dates found all four lag features correct. Overall, I find his results believable as reported.
