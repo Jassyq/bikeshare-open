@@ -45,6 +45,11 @@ UNVERIFIED_COLS = {"cnt_2d_bfr"}
 # What feature_columns() and the tests actually enforce.
 FORBIDDEN = LEAKAGE_COLS | TIME_INDEX_COLS | UNVERIFIED_COLS
 
+# 4. Rejected: built and tested, but not fed to the model. cnt_roll_3 lowered
+#    validation R^2 (ridge -0.0036, hgb -0.0202); see docs/DECISIONS.md.
+#    Not leakage, so it is kept out of FORBIDDEN and its test stays.
+REJECTED_FEATURES = {"cnt_roll_3"}
+
 # Temporal split: train on 2011, validate on H1 2012, test on H2 2012.
 TRAIN_END = "2011-12-31"
 VALID_END = "2012-06-30"

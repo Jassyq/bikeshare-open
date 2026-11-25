@@ -19,7 +19,8 @@ rides) from calendar, weather, and lagged-demand features.
   Train = 2011, valid = H1 2012, test = H2 2012. Never tune on test.
 - Any new lag or rolling feature must be built on a gap-free calendar
   index (`src.features.reindex_to_calendar`) and must `.shift(1)` before
-  it aggregates. Add a test for it in `tests/test_leakage.py`.
+  it aggregates. Add a test for it in `tests/test_leakage.py`. A feature
+  that does not help goes in `REJECTED_FEATURES`; keep its test.
 - `data/raw/bike_daily.csv` is immutable (sha256 checked in `load_raw`). Any
   new raw column must be classified in `CLASSIFIED_RAW_COLS` or `FORBIDDEN`.
 - Report the mean baseline **and** the persistence baseline (yesterday's
